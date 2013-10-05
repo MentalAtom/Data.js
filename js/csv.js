@@ -24,8 +24,8 @@
 		//Remove the end of line commas
 		CSVData = CSVData.replace(/,(?=\n\r|\n|\r)/g, '');
 
-		//Get the column headings and rows
-		var rows = CSVData.split(/(?=,)\n/g),
+		//Get the column headings and rows (Split at newlines not inside double quotes. Avoid commas inside double quotes)
+		var rows = CSVData.split(/\n(?![\w]+["])/g),
 			columnHeadings = rows[0].split(/(?!"),(?![\w]+["])/g),
 			newData = [],
 			rowFields,
@@ -81,12 +81,15 @@
 
 			});
 
+			//Push into the rows array the new row (once CSV parsed)
 			rows.push(data.delimit(JSON[i]) + "\n");
 
 		}
 
+		//Add the headings back into the top of the file
 		rows.unshift(data.delimit(props) + "\n");
 
+		//Return a CSV (Join the rows array)
 		return rows.join('');
 
 	};
@@ -102,6 +105,9 @@
 
 		data.forEach(JSON, function (key, value) {
 
+			/* If the value contains a newline, comma, or double quote, then wrap in quotes,
+			 * if it contains quotes then encode these with another quote (see RFC 4108)
+			 */
 			if (value.match(/["\n,]/g)) {
 
 				var newVal = value.replace(/"/g, '""');
