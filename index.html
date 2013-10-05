@@ -2,9 +2,18 @@
 <html>
 <head>
 	<title>XML Parser Test</title>
-	<script src="data.js"></script>
-	<script src="core.js"></script>
-	<script src="csv.js"></script>
+	<script src="js/data.js"></script>
+	<script src="js/core.js"></script>
+	<script src="js/csv.js"></script>
+	<script src="js/xml.js"></script>
+
+	<script type="text/javascript">
+	data.load("example/Weather.csv", {
+		callback: function (response) {
+			window.csv = data.csvToJSON(response);
+		}
+	})
+	</script>
 </head>
 <body>
 
