@@ -1,6 +1,7 @@
 describe("CSV Conversion", function() {
-  var loadedData;
-  var processedData;
+  var loadedData,
+      processedData,
+      invalidData;
 
   beforeEach(function() {
     data.load("example/Simple.csv", {
@@ -8,6 +9,13 @@ describe("CSV Conversion", function() {
       callback: function (response) {
         loadedData = response;
         processedData = data.CSVtoJSON(loadedData);
+      }
+    });
+
+    data.load("example/Broken.csv", {
+      type: "GET",
+      callback: function (response) {
+        invalidData = response;
       }
     });
 
@@ -35,6 +43,22 @@ describe("CSV Conversion", function() {
     var rowNum = data.countRows(loadedData, true);
 
     expect(rowNum).toEqual(processedData.length + 1);
+
+  });
+
+  it("Should return true for a valid CSV when isValidCSV is called", function () {
+
+    var isValid = data.isValidCSV(loadedData);
+
+    expect(isValid).toEqual(true);
+
+  });
+
+  it("Should return false for an invalid CSV when isValidCSV is called", function () {
+
+    var isValid = data.isValidCSV(invalidData);
+
+    expect(isValid).toEqual(false);
 
   });
 

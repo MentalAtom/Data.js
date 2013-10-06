@@ -150,4 +150,32 @@
 
 	};
 
+	data.isValidCSV = function (CSV) {
+
+		//Remove the end of line commas and remove the final comma
+		CSV = CSV.replace(/,(?=\n\r|\n|\r)/g, '');
+
+		console.log(CSV);
+
+		var rows = CSV.split(/\n(?![\w]+["])/g),
+			cols = rows[0].split(/(?!"),(?![\w]+["])/g).length,
+			returnVal = true,
+			rowlen;
+
+		rows.splice(0,1);
+
+		data.forEach(rows, function (i, row) {
+
+			rowlen = row.split(/(?!"),(?![\w]+["])/g).length;
+
+			if (rowlen !== cols && i !== rows.length) {
+				returnVal = false;
+			}
+
+		});
+
+		return returnVal;
+
+	};
+
 }(data));
