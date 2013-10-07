@@ -46,18 +46,12 @@ describe("CSV Conversion", function() {
 
   });
 
-  it("Should return true for a valid CSV when isValidCSV is called", function () {
+  it("Should return true for a valid CSV when isValidCSV is called, and false when an invalid CSV is called", function () {
 
     var isValid = data.isValidCSV(loadedData);
-
     expect(isValid).toEqual(true);
 
-  });
-
-  it("Should return false for an invalid CSV when isValidCSV is called", function () {
-
-    var isValid = data.isValidCSV(invalidData);
-
+    isValid = data.isValidCSV(invalidData);
     expect(isValid).toEqual(false);
 
   });

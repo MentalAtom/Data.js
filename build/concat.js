@@ -1,3 +1,88 @@
+if (typeof data !== "object") {
+
+	data = {};
+
+}
+
+(function () {
+
+	"use strict";
+
+	data.extendObject = function (base, additions) {
+
+		var prop,
+			owns = Object.prototype.hasOwnProperty;
+
+		for (prop in additions) {
+
+			if (owns.call(additions, prop)) {
+				base[prop] = additions[prop];
+			}
+
+		}
+
+	};
+
+	data.createClass = function (base, proto) {
+
+		function B () {}
+
+		function Initializr () {
+			this.init.apply(this, arguments);
+		}
+
+		if (!proto) {
+			proto = base;
+			base = {};
+		}
+
+		B.prototype = base.prototype;
+
+		Initializr.prototype = new B();
+
+		//Allow us to access the functions of the base from the proto
+		Initializr.parent = base.prototype;
+
+		data.extendObject(Initializr.prototype, proto);
+
+		return Initializr;
+
+	};
+
+}());
+(function (xmlr) {
+
+	xmlr.load = function (URL, options) {
+
+		var xhr = new XMLHttpRequest(),
+			defaults = {
+				type: "GET",
+				data: ''
+			};
+
+		xhr.open(options.type, URL);
+
+		xhr.onload = function () {
+			options.callback(xhr.responseText);
+		};
+
+		xhr.send(JSON.stringify(options.data));
+
+	};
+
+	xmlr.forEach = function (data, callback) {
+
+		var i;
+
+		for (i in data) {
+
+			callback(i, data[i]);
+
+		}
+
+	};
+
+})(data);
 (function (xmlr) {
 
 	"use strict";
@@ -245,3 +330,118 @@
 	};
 
 }(data));
+(function () {
+
+	"use strict";
+
+	/**
+	 * An incomplete shim for Array.indexOf
+	 */
+	if (Array.prototype.indexOf === undefined) {
+
+		Array.prototype.indexOf = function (SearchKey) {
+
+			var i;
+
+			for (i in this) {
+
+				if (this[i] === SearchKey) {
+					return i;
+				}
+
+			}
+
+			return -1;
+
+		};
+
+	}
+
+	if (String.prototype.trim === undefined) {
+
+		String.prototype.trim = function () {
+			return this.replace(/[\s]+/g, "");
+		};
+
+	}
+
+}());
+(function (xmlr) {
+
+	/**
+	 * Gets the name of the root element of an XML object
+	 * @param  {Object} XML The XML to determine the root object for
+	 * @return {String}     The name of the root element
+	 */
+	xmlr.getRootElementName = function (XML) {
+
+		var index;
+
+		for (index in XML.childNodes) {
+
+			if (XML.childNodes[index].nodeType === 1) {
+				return XML.childNodes[index].tagName;
+			}
+
+		}
+		
+		throw new Error("Could not find root element");
+
+	};
+
+	/**
+	 * Counts the direct children of the root element in an XML document
+	 * @param  {Object} XML The XML document
+	 * @returns {Number} The number of children of the root element
+	 */
+	xmlr.countChildNodes = function (XML) {
+
+		var count = 0,
+			child,
+			rootTag = xmlr.getRootElementName(XML),
+			children = XML.getElementsByTagName(rootTag)[0].childNodes;
+
+		for (child in children) {
+
+			if (children[child].nodeType && children[child].nodeType !== 3) {
+				count += 1;
+			}
+
+		}
+
+		return count;
+
+	};
+
+	xmlr.JSONtoXML = function (JSON, rootTagName) {
+
+		var defaults = {
+			rootTagName: "JSON"
+		};
+
+		if (!rootTagName) {
+			rootTagName = defaults.rootTagName;
+		}
+
+		var newDoc = document.implementation.createDocument(null, null, null),
+			rootEl;
+
+		//Let us make the root element
+		rootEl = document.createElement(rootTagName);
+		newDoc.appendChild(rootEl);
+
+		xmlr.forEach(JSON, function (key, value) {
+
+			var newEl = document.createElement(key);
+
+			newEl.innerHTML = value;
+
+			rootEl.appendChild(newEl);
+
+		});
+
+		console.log(newDoc);
+
+	};
+
+})(data);
