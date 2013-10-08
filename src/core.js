@@ -30,4 +30,19 @@
 
 	};
 
+	xmlr.forEachDeep = function (data, callback) {
+
+		var i,
+			a;
+
+			for (i in data) {
+
+				for (a in data[i]) {
+					callback(i, a, data[i][a]);
+				}
+
+			}
+
+	};
+
 })(data);
