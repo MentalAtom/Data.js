@@ -284,61 +284,16 @@ if (typeof data !== "object") {
 	};
 
 	/**
-	 * Find rows in a CSV matching the given criteria
+	 * Find rows in a CSV matching the given criteria and returns the row numbers
 	 * @param {String|Object} CSV A processed or unprocessed CSV
 	 * @param {String} sum A criteria for the search e.g. "one equals two" to find rows where column one equals two
 	 */
 	data.CSVrowsWhere = function (CSV, sum, returnType) {
 
-		//Get the data into a format we can handle
-		if (typeof CSV !== 'object') {
-			CSV = data.CSVtoJSON(CSV);
-		}
+		var Matcher = new data.CSVMatcher(CSV, sum),
+			returnRows;
 
-		var caseType,
-			caseSplit,
-			column,
-			comparison,
-			trimmed,
-			returnRows = [];
-
-		if (sum.indexOf("equals") > 0) {
-			caseType = 1;
-			caseSplit = "equals";
-		} else if (sum.indexOf("===") > 0) {
-			caseType = 1;
-			caseSplit = "===";
-		}
-
-		if (!caseType) {
-			throw new Error("No valid criteria specified, sorry :(");
-		}
-
-		switch (caseType) 
-		{
-		case 1:
-			//Equal to..
-			column = sum.substr(0, sum.indexOf(caseSplit) - 1).toString();
-			comparison = sum.substring(sum.indexOf(caseSplit) + (caseSplit.length + 1), sum.length);
-
-			comparison.trim();
-			column = column.trim().toString();
-
-			data.forEach(CSV, function (rowNum, rowData) {
-
-				data.forEach(rowData, function (col, val) {
-
-					trimmed = col.toString().replace(/\s/g, "").trim();
-
-					if (trimmed === column && val === comparison) {
-						returnRows.push(rowNum);
-					}
-
-				});
-
-			});
-			break;
-		}
+		returnRows = Matcher.rows;
 
 		return returnRows;
 
@@ -350,7 +305,7 @@ data.CSVMatcher = (function () {
 	"use strict";
 
 	var config = {
-		types: ["equals", "morethan"],
+		types: ["equals", "morethan", "lessthan"],
 		equals: {
 			discover: /[\w\s]*\s(?=equals|[\=]{1,3}(?!=))/,
 			//If we match this, then we have equals signs. If not, it must be the word equals.
@@ -360,10 +315,15 @@ data.CSVMatcher = (function () {
 		},
 		morethan: {
 			discover: /[\w\s]*\s(?=greater than|[\>?]{1}(?=\s))/,
-			//If we match this, then we have equals signs. If not, it must be the word equals.
 			delimeter: /\s[\>]{1}(?=\s)/,
 			delimitMatch: /\s[\>]{1}/g,
 			delimitFalse: "greater than"
+		},
+		lessthan: {
+			discover: /[\w\s]*\s(?=less than|[\\<]{1}(?=\s))/,
+			delimeter: /\s[\\<]{1}(?=\s)/,
+			delimitMatch: /\s[\\<]{1}/g,
+			delimitFalse: "less than"
 		}
 	};
 
@@ -563,12 +523,26 @@ data.CSVMatcher = (function () {
 		},
 
 		/**
+		 * Checks if first greater than last
+		 * @param  {String|Number} first The first part of the expression
+		 * @param  {String|Number} last  The last part of the expression
+		 * @return {Array}       The row numbers which match
+		 */
+		lessthanMatcher: function (first, last) {
+
+			this.performBasicMatch("<", first, last);
+
+			return this.rows;
+
+		},
+
+		/**
 		 * Performs a match which is a basic arithmetic operation
 		 * (Equals, More than, less than). This is called by internal functions.
-		 * @param  {String} expression The arithmetic operation to perform ("<", ">" or "=")
-		 * @param  {String|Number} first      The column name
-		 * @param  {String|Number} last       The column value
-		 * @return {Array}            The row numbers which match
+		 * @param  {String} expression - The arithmetic operation to perform ("<", ">" or "=")
+		 * @param  {String|Number} first - The column name
+		 * @param  {String|Number} last - The column value
+		 * @return {Array} - The row numbers which match
 		 */	
 		performBasicMatch: function (expression, first, last) {
 

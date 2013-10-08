@@ -184,61 +184,16 @@
 	};
 
 	/**
-	 * Find rows in a CSV matching the given criteria
+	 * Find rows in a CSV matching the given criteria and returns the row numbers
 	 * @param {String|Object} CSV A processed or unprocessed CSV
 	 * @param {String} sum A criteria for the search e.g. "one equals two" to find rows where column one equals two
 	 */
 	data.CSVrowsWhere = function (CSV, sum, returnType) {
 
-		//Get the data into a format we can handle
-		if (typeof CSV !== 'object') {
-			CSV = data.CSVtoJSON(CSV);
-		}
+		var Matcher = new data.CSVMatcher(CSV, sum),
+			returnRows;
 
-		var caseType,
-			caseSplit,
-			column,
-			comparison,
-			trimmed,
-			returnRows = [];
-
-		if (sum.indexOf("equals") > 0) {
-			caseType = 1;
-			caseSplit = "equals";
-		} else if (sum.indexOf("===") > 0) {
-			caseType = 1;
-			caseSplit = "===";
-		}
-
-		if (!caseType) {
-			throw new Error("No valid criteria specified, sorry :(");
-		}
-
-		switch (caseType) 
-		{
-		case 1:
-			//Equal to..
-			column = sum.substr(0, sum.indexOf(caseSplit) - 1).toString();
-			comparison = sum.substring(sum.indexOf(caseSplit) + (caseSplit.length + 1), sum.length);
-
-			comparison.trim();
-			column = column.trim().toString();
-
-			data.forEach(CSV, function (rowNum, rowData) {
-
-				data.forEach(rowData, function (col, val) {
-
-					trimmed = col.toString().replace(/\s/g, "").trim();
-
-					if (trimmed === column && val === comparison) {
-						returnRows.push(rowNum);
-					}
-
-				});
-
-			});
-			break;
-		}
+		returnRows = Matcher.rows;
 
 		return returnRows;
 
