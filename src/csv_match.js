@@ -46,6 +46,9 @@ data.CSVMatcher = (function () {
 				this.CSVData = data.CSVtoJSON(this.CSVData);
 			}
 			
+			//Split into parts...
+			this.findCombo();
+
 			//Work out the type of match...
 			this.discoverType();
 			//And then find the delimeter
@@ -284,6 +287,24 @@ data.CSVMatcher = (function () {
 			}
 
 			return that.rows;
+
+		},
+
+		findCombo: function () {
+
+			var that = this;
+
+			this.combos = this.testString.split(/(\sand\s|\s[&]{2}(?!&)\s)/g);
+
+			data.forEach (this.combos, function (index, value) {
+
+				if (/(and|[&]{2})/g.test(value)) {
+
+					that.combos.splice(index, 1);
+
+				}
+
+			});
 
 		}
 
