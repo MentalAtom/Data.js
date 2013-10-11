@@ -27,7 +27,7 @@ if (typeof data !== "object") {
 
 		function B () {}
 
-		function Initializr () {
+		function DataObject () {
 			this.init.apply(this, arguments);
 		}
 
@@ -38,14 +38,14 @@ if (typeof data !== "object") {
 
 		B.prototype = base.prototype;
 
-		Initializr.prototype = new B();
+		DataObject.prototype = new B();
 
 		//Allow us to access the functions of the base from the proto
-		Initializr.parent = base.prototype;
+		DataObject.parent = base.prototype;
 
-		data.extendObject(Initializr.prototype, proto);
+		data.extendObject(DataObject.prototype, proto);
 
-		return Initializr;
+		return DataObject;
 
 	};
 
@@ -127,9 +127,12 @@ if (typeof data !== "object") {
 		//Get the column headings and rows (Split at newlines not inside double quotes. Avoid commas inside double quotes)
 		var rows = CSVData.split(/\n(?![\w]+["])/g),
 			columnHeadings = rows[0].split(/(?!"),(?![\w]+["])/g),
-			newData = [],
+			newData = new data.CSVObject(),
 			rowFields,
 			colNum = columnHeadings.length;
+
+		//Push the columns into the new CSVObject
+		columnHeadings = newData.setColumns(columnHeadings);
 
 		//Remove the column heading rows from the data
 		rows.splice(0, 1);
@@ -607,6 +610,87 @@ data.CSVMatcher = (function () {
 				}
 
 			});
+
+			console.log(this.combos);
+
+		}
+
+	});
+
+}());
+data.CSVObject = (function () {
+
+	"use strict";
+
+	return data.createClass({
+
+		init: function () {
+
+			this.rowCount = null;
+			this.columns = [];
+			this.rows = [];
+
+		},
+
+		push: function (value) {
+
+			Array.prototype.push.call(this.rows, value);
+
+			this.rowCount += 1;
+
+		},
+
+		where: function (expression) {
+
+			var Matcher = new data.CSVMatcher(this.rows, expression),
+				returnRows = new data.CSVObject(),
+				that = this;
+
+			returnRows.setColumns(this.columns);
+
+			data.forEach(Matcher.rows, function (i, row) {
+
+				returnRows.push(that.rows[row]);
+
+			});
+
+			return returnRows;
+
+		},
+
+		setColumns: function (columnArray) {
+
+			var that = this;
+
+			if (!this.columns) {
+				this.columns = [];
+			}
+
+			data.forEach(columnArray, function (i, column) {
+				that.columns.push(column.trim());
+			});
+
+			return this.columns;
+
+		},
+
+		get: function (columnName) {
+
+			var returnArr = [];
+
+			data.forEachDeep(this.rows, function (index, column, value) {
+
+				if (column === columnName) {
+					returnArr.push(value);
+				}
+
+			});
+
+			if (returnArr.length === 1) {
+				returnArr = returnArr[0];
+			}
+
+			return returnArr;
 
 		}
 

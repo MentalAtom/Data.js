@@ -306,6 +306,8 @@ data.CSVMatcher = (function () {
 
 			});
 
+			console.log(this.combos);
+
 		}
 
 	});

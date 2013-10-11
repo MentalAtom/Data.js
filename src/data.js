@@ -27,7 +27,7 @@ if (typeof data !== "object") {
 
 		function B () {}
 
-		function Initializr () {
+		function DataObject () {
 			this.init.apply(this, arguments);
 		}
 
@@ -38,14 +38,14 @@ if (typeof data !== "object") {
 
 		B.prototype = base.prototype;
 
-		Initializr.prototype = new B();
+		DataObject.prototype = new B();
 
 		//Allow us to access the functions of the base from the proto
-		Initializr.parent = base.prototype;
+		DataObject.parent = base.prototype;
 
-		data.extendObject(Initializr.prototype, proto);
+		data.extendObject(DataObject.prototype, proto);
 
-		return Initializr;
+		return DataObject;
 
 	};
 

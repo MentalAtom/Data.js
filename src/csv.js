@@ -27,9 +27,12 @@
 		//Get the column headings and rows (Split at newlines not inside double quotes. Avoid commas inside double quotes)
 		var rows = CSVData.split(/\n(?![\w]+["])/g),
 			columnHeadings = rows[0].split(/(?!"),(?![\w]+["])/g),
-			newData = [],
+			newData = new data.CSVObject(),
 			rowFields,
 			colNum = columnHeadings.length;
+
+		//Push the columns into the new CSVObject
+		columnHeadings = newData.setColumns(columnHeadings);
 
 		//Remove the column heading rows from the data
 		rows.splice(0, 1);
