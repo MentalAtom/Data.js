@@ -3,7 +3,7 @@ data.CSVMatcher = (function () {
 	"use strict";
 
 	var config = {
-		types: ["equals", "morethan", "lessthan"],
+		types: ["equals", "morethan", "lessthan", "notequal"],
 		equals: {
 			discover: /[\w\s]*\s(?=equals|[\=]{1,3}(?!=))/,
 			//If we match this, then we have equals signs. If not, it must be the word equals.
@@ -22,6 +22,12 @@ data.CSVMatcher = (function () {
 			delimeter: /\s[\\<]{1}(?=\s)/,
 			delimitMatch: /\s[\\<]{1}/g,
 			delimitFalse: "less than"
+		},
+		notequal: {
+			discover: /[\w\s]*\s(?=not equal to|[\!]{1}[\=]{2}(?=\s))/,
+			delimeter: /\s[!]{1}[=]{2}(?=[\s])/,
+			delimitMatch: /\s[!]{1}[=]{2}/g,
+			delimitFalse: "not equal to"
 		}
 	};
 
@@ -60,7 +66,6 @@ data.CSVMatcher = (function () {
 				this.addMatchers();
 				this.doMatch();
 			} else {
-				console.log("processMultiple");
 				this.processMultiple();
 			}
 
@@ -79,7 +84,7 @@ data.CSVMatcher = (function () {
 
 				if (config[type].discover.test(that.testString)) {
 					that.testType = returnVal = type;
-					console.log("Matches test type: " + type);
+					// console.log("Matches test type: " + type);
 				}
 
 			});
@@ -102,8 +107,6 @@ data.CSVMatcher = (function () {
 				testConfig = config[this.testType];
 
 			if (matches) {
-
-				console.log("Found match");
 
 				if (testConfig.delimitMatch instanceof RegExp) {
 					this.delimeter = this.testString.match(testConfig.delimitMatch)[0];
@@ -243,6 +246,20 @@ data.CSVMatcher = (function () {
 		},
 
 		/**
+		 * Checks if first greater than last
+		 * @param  {String|Number} first The first part of the expression
+		 * @param  {String|Number} last  The last part of the expression
+		 * @return {Array}       The row numbers which match
+		 */
+		notequalMatcher: function (first, last) {
+
+			this.performBasicMatch("!=", first, last);
+
+			return this.rows;
+
+		},
+
+		/**
 		 * Performs a match which is a basic arithmetic operation
 		 * (Equals, More than, less than). This is called by internal functions.
 		 * @param  {String} expression - The arithmetic operation to perform ("<", ">" or "=")
@@ -252,7 +269,7 @@ data.CSVMatcher = (function () {
 		 */	
 		performBasicMatch: function (expression, first, last) {
 
-			var validOption = [">", "<", "="],
+			var validOption = [">", "<", "=", "!="],
 				that = this;
 
 			if (validOption.indexOf(expression) > -1) {
@@ -281,6 +298,10 @@ data.CSVMatcher = (function () {
 								that.rows.push(that.CSVData[rowIndex]);
 							}
 							break;
+						case "!=":
+							if (field !== last) {
+								that.rows.push(that.CSVData[rowIndex]);
+							}
 						}
 
 					}
@@ -321,15 +342,9 @@ data.CSVMatcher = (function () {
 
 			this.combos.splice(0, 1);
 
-			console.log(matcher);
-
 			data.forEach(this.combos, function (i, exp) {
 
-				console.log(exp);
-
 				matcher = new data.CSVMatcher(matcher.rows, exp);
-
-				console.log(matcher);
 
 			});
 
