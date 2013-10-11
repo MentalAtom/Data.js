@@ -49,15 +49,20 @@ data.CSVMatcher = (function () {
 			//Split into parts...
 			this.findCombo();
 
-			//Work out the type of match...
-			this.discoverType();
-			//And then find the delimeter
-			this.findDelimeter();
-			//And then, get both parts of the query.
-			this.findQueryParts();
-			//Now we get the matchers warmed up, and fire the correct one.
-			this.addMatchers();
-			this.doMatch();
+			if (this.combos.length === 1) {
+				//Work out the type of match...
+				this.discoverType();
+				//And then find the delimeter
+				this.findDelimeter();
+				//And then, get both parts of the query.
+				this.findQueryParts();
+				//Now we get the matchers warmed up, and fire the correct one.
+				this.addMatchers();
+				this.doMatch();
+			} else {
+				console.log("processMultiple");
+				this.processMultiple();
+			}
 
 		},
 
@@ -263,17 +268,17 @@ data.CSVMatcher = (function () {
 						{
 						case ">":
 							if (parseInt(field, 10) > parseInt(last, 10)) {
-								that.rows.push(rowIndex);
+								that.rows.push(that.CSVData[rowIndex]);
 							}
 							break;
 						case "<":
 							if (parseInt(field, 10) < parseInt(last, 10)) {
-								that.rows.push(rowIndex);
+								that.rows.push(that.CSVData[rowIndex]);
 							}
 							break;
 						case "=":
 							if (field === last) {
-								that.rows.push(rowIndex);
+								that.rows.push(that.CSVData[rowIndex]);
 							}
 							break;
 						}
@@ -306,7 +311,29 @@ data.CSVMatcher = (function () {
 
 			});
 
-			console.log(this.combos);
+			return this.combos;
+
+		},
+
+		processMultiple: function () {
+
+			var matcher = new data.CSVMatcher(this.CSVData, this.combos[0]);
+
+			this.combos.splice(0, 1);
+
+			console.log(matcher);
+
+			data.forEach(this.combos, function (i, exp) {
+
+				console.log(exp);
+
+				matcher = new data.CSVMatcher(matcher.rows, exp);
+
+				console.log(matcher);
+
+			});
+
+			this.rows = matcher.rows;
 
 		}
 

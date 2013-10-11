@@ -30,7 +30,7 @@ data.CSVObject = (function () {
 
 			data.forEach(Matcher.rows, function (i, row) {
 
-				returnRows.push(that.rows[row]);
+				returnRows.push(row);
 
 			});
 
