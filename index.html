@@ -5,7 +5,7 @@
 	<script src="build/concat.js"></script>
 
 	<script type="text/javascript">
-	data.load("example/Weather.csv", {
+	data.load("http://127.0.0.1/Weather.csv", {
 		callback: function (response) {
 			window.csv = data.CSVtoJSON(response);
 		}
@@ -17,7 +17,7 @@
 	<h1>Table Data</h1>
 
 	<div style="width:50%;float:left;display:block;">
-		<table cellpadding="1" cellspacing="1" id="testTable">
+		<table cellpadding="1" cellspacing="1" id="testTable" border="1" width="80%">
 			<thead>
 				<tr>
 					<th>First Name</th>

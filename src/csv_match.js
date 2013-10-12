@@ -3,7 +3,7 @@ data.CSVMatcher = (function () {
 	"use strict";
 
 	var config = {
-		types: ["equals", "morethan", "lessthan", "notequal"],
+		types: ["equals", "morethan", "lessthan", "notequal", "contains"],
 		equals: {
 			discover: /[\w\s]*\s(?=equals|[\=]{1,3}(?!=))/,
 			//If we match this, then we have equals signs. If not, it must be the word equals.
@@ -28,6 +28,11 @@ data.CSVMatcher = (function () {
 			delimeter: /\s[!]{1}[=]{2}(?=[\s])/,
 			delimitMatch: /\s[!]{1}[=]{2}/g,
 			delimitFalse: "not equal to"
+		},
+		contains: {
+			discover: /[\w\s]*\s(?=contains)/g,
+			delimeter: /\s(?=contains\s)/,
+			delimitMatch: /\scontains\s/g
 		}
 	};
 
@@ -256,6 +261,27 @@ data.CSVMatcher = (function () {
 			this.performBasicMatch("!=", first, last);
 
 			return this.rows;
+
+		},
+
+		containsMatcher : function (first, last) {
+
+			var that = this;
+
+			data.forEachDeep(this.CSVData, function (rowIndex, fieldLabel, field) {
+
+				field = field.toString().trim();
+				fieldLabel = fieldLabel.trim();
+
+				if (fieldLabel === first) {
+
+					if (field.indexOf(last) > -1) {
+						that.rows.push(that.CSVData[rowIndex]);
+					}
+
+				}
+
+			});
 
 		},
 

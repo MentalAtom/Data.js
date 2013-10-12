@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         seperator: ';'
       },
       dist: {
-        src: ['src/data.js', 'src/*.js'],
+        src: ['src/data.js', 'src/shim.js', 'src/*.js'],
         dest: 'build/concat.js'
       }
     },

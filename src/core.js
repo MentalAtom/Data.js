@@ -1,39 +1,71 @@
-(function (xmlr) {
+(function (data) {
 
-	xmlr.load = function (URL, options) {
+	data.load = function (URL, options) {
+
+		if (!options) {
+			options = {};
+		}
 
 		var xhr = new XMLHttpRequest(),
+			xdr,
 			defaults = {
 				type: "GET",
 				data: ''
+			},
+			onload;
+
+		options = data.extendObject(options, defaults);
+
+		if (!XDomainRequest) {
+
+			onload = function () {
+				options.callback(xhr.responseText);
 			};
 
-		xhr.open(options.type, URL);
+			xhr.open(options.type, URL);
 
-		xhr.onload = function () {
-			options.callback(xhr.responseText);
-		};
+			xhr.onload = onload;
 
-		xhr.send(JSON.stringify(options.data));
+			xhr.send(JSON.stringify(options.data));
 
-	};
+		} else {
 
-	xmlr.forEach = function (data, callback) {
+			onload = function () {
+				options.callback(xdr.responseText);
+			};
 
-		var i;
+			xdr = new XDomainRequest();
 
-		for (i in data) {
+			xdr.open(options.type, URL);
 
-			callback(i, data[i]);
+			xdr.onload = onload;
+
+			xdr.send(JSON.stringify(options.data));
 
 		}
 
 	};
 
-	xmlr.forEachDeep = function (data, callback) {
+	data.forEach = function (data, callback) {
 
 		var i,
-			a;
+			owns = Object.prototype.hasOwnProperty;
+
+		for (i in data) {
+
+			if (owns.call(data, i)) {
+				callback(i, data[i]);
+			}
+
+		}
+
+	};
+
+	data.forEachDeep = function (data, callback) {
+
+		var i,
+			a,
+			owns = Object.prototype.hasOwnProperty;
 
 			for (i in data) {
 

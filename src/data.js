@@ -21,6 +21,8 @@ if (typeof data !== "object") {
 
 		}
 
+		return base;
+
 	};
 
 	data.createClass = function (base, proto) {

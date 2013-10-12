@@ -189,7 +189,7 @@
 
             rowlen = row.split(/(?!"),(?![\w]+["])/g).length;
 
-            if (rowlen !== cols && i !== rows.length) {
+            if (rowlen !== cols && i !== rows.length && (row !== "" && i !== rows.length - 1)) {
                 returnVal = false;
             }
 
