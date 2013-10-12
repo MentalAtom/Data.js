@@ -368,7 +368,8 @@ if (typeof data !== "object") {
                 rows: []
             },
             rowData,
-            cellIndex = 0;
+            cellIndex = 0,
+            returnObj = new data.CSVObject();
 
         //Get our column headings
         data.forEach(headings, function (i, th) {
@@ -382,13 +383,13 @@ if (typeof data !== "object") {
         //And now get the cells in each row
         data.forEach(rows, function (i, tr) {
 
-            rowData = {};
-
             if (tr.nodeType === 1) {
+
+                rowData = {};
                 
                 data.forEach(tr.childNodes, function (a, child) {
 
-                    if (child.nodeType === 1) {
+                    if (child.nodeType === 1 && child.tagName.toLowerCase() === "td") {
                         rowData[CSVData.columns[cellIndex]] = child.innerHTML;
                         cellIndex += 1;
                     }
@@ -397,12 +398,14 @@ if (typeof data !== "object") {
 
             }
 
-            CSVData.rows.push(rowData);
+            returnObj.push(rowData);
             cellIndex = 0;
 
         });
 
-        console.log(CSVData);
+        returnObj.setColumns(CSVData.columns);
+
+        return returnObj;
 
     };
 
