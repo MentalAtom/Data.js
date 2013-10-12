@@ -5,6 +5,11 @@
     "type": "git",
     "url": "https://github.com/MentalAtom/Data.js.git"
   },
+  "author" : {
+    "name" : "Matt Malone",
+    "email" : "swapthatspoon@gmail.com",
+    "url" : "http://dochype.com"
+  },
   "licenses" : [
     {
       "type" : "MIT",

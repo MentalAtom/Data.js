@@ -1,8 +1,12 @@
 module.exports = function(grunt) {
 
+  var pkg = grunt.file.readJSON('package.json'),
+      licenseURL = pkg.licenses[0].url;
+
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    licenseURL: pkg.licenses[0].url,
     concat: {
       options: {
         seperator: ';'
@@ -14,7 +18,7 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        banner: '/*!\n <%= pkg.name %> - v<%= pkg.version %> | Build Date: <%= grunt.template.today("yyyy-mm-dd") %> \n (c) 2013 Matt Malone | <%= licenseURL %>\n*/\n'
       },
       build: {
         src: 'build/concat.js',
