@@ -27,14 +27,14 @@ describe("CSV Conversion", function() {
   });
 
   it("Should convert Simple.csv into an Object with a length of 3", function() {
-    expect(processedData).toHaveLengthOf(3);
+    expect(processedData.rows).toHaveLengthOf(3);
   });
 
   it("Should count the number of rows to be the same as the converted data", function () {
 
     var rowNum = data.countRows(loadedData);
 
-    expect(rowNum).toEqual(processedData.length);
+    expect(rowNum).toEqual(processedData.rowCount);
 
   });
 
@@ -42,7 +42,7 @@ describe("CSV Conversion", function() {
 
     var rowNum = data.countRows(loadedData, true);
 
-    expect(rowNum).toEqual(processedData.length + 1);
+    expect(rowNum).toEqual(processedData.rowCount + 1);
 
   });
 
