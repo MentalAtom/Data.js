@@ -276,7 +276,7 @@ data.CSVMatcher = (function () {
 
 				data.forEachDeep(this.CSVData, function (rowIndex, fieldLabel, field) {
 
-					field = field.trim();
+					field = field.toString().trim();
 					fieldLabel = fieldLabel.trim();
 
 					if (fieldLabel === first) {

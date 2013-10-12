@@ -214,6 +214,13 @@ if (typeof data !== "object") {
 
         data.forEach(JSON, function (key, value) {
 
+            /**
+             * Turn any number values back into a string for matching
+             */
+            if (typeof value !== "string") {
+                value = value.toString();
+            }
+
             /* If the value contains a newline, comma, or double quote, then wrap in quotes,
              * if it contains quotes then encode these with another quote (see RFC 4108)
              */
@@ -705,7 +712,7 @@ data.CSVMatcher = (function () {
 
 				data.forEachDeep(this.CSVData, function (rowIndex, fieldLabel, field) {
 
-					field = field.trim();
+					field = field.toString().trim();
 					fieldLabel = fieldLabel.trim();
 
 					if (fieldLabel === first) {
@@ -857,6 +864,12 @@ data.CSVObject = (function () {
 			}
 
 			return returnArr;
+
+		},
+
+		toCSV: function () {
+
+			return data.JSONtoCSV(this.rows);
 
 		}
 

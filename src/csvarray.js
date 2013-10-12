@@ -72,6 +72,12 @@ data.CSVObject = (function () {
 
 			return returnArr;
 
+		},
+
+		toCSV: function () {
+
+			return data.JSONtoCSV(this.rows);
+
 		}
 
 	});

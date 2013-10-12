@@ -114,6 +114,13 @@
 
         data.forEach(JSON, function (key, value) {
 
+            /**
+             * Turn any number values back into a string for matching
+             */
+            if (typeof value !== "string") {
+                value = value.toString();
+            }
+
             /* If the value contains a newline, comma, or double quote, then wrap in quotes,
              * if it contains quotes then encode these with another quote (see RFC 4108)
              */
