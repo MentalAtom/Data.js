@@ -18,6 +18,8 @@ data.CSVObject = (function () {
 
 			this.rowCount += 1;
 
+			return this.rows;
+
 		},
 
 		where: function (expression) {
@@ -74,9 +76,9 @@ data.CSVObject = (function () {
 
 		},
 
-		toCSV: function () {
+		toCSV: function (delimeter) {
 
-			return data.JSONtoCSV(this.rows);
+			return data.JSONtoCSV(this.rows, delimeter);
 
 		}
 

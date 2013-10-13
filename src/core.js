@@ -16,7 +16,7 @@
 
 		options = data.extendObject(options, defaults);
 
-		if (!XDomainRequest) {
+		if (!window.XDomainRequest) {
 
 			onload = function () {
 				options.callback(xhr.responseText);

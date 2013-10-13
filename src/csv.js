@@ -73,7 +73,7 @@
      * @param {Object} JSON The JSON to encode as a CSV
      * @returns {String} The CSV String
      */
-    data.JSONtoCSV = function (JSON) {
+    data.JSONtoCSV = function (JSON, delimeter) {
 
         var props = [],
             rows = [],
@@ -91,12 +91,12 @@
             });
 
             //Push into the rows array the new row (once CSV parsed)
-            rows.push(data.delimit(JSON[i]) + "\n");
+            rows.push(data.delimit(JSON[i], delimeter) + "\n");
 
         }
 
         //Add the headings back into the top of the file
-        rows.unshift(data.delimit(props) + "\n");
+        rows.unshift(data.delimit(props, delimeter) + "\n");
 
         //Return a CSV (Join the rows array)
         return rows.join('');
@@ -108,7 +108,11 @@
      * @param  {Object} JSON The Object to encode as a CSV
      * @return {String} CSV-Encoded data for the object
      */
-    data.delimit = function (JSON) {
+    data.delimit = function (JSON, delimeter) {
+
+        if (!delimeter) {
+            delimeter = ",";
+        }
 
         var str = "";
 
@@ -132,7 +136,7 @@
 
             } else {
 
-                str +=  value + ',';
+                str +=  value + delimeter;
 
             }
 
