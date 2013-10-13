@@ -352,8 +352,6 @@ if (typeof data !== "object") {
         //Remove the end of line commas and remove the final comma
         CSV = CSV.replace(/,(?=\n\r|\n|\r)/g, '');
 
-        console.log(CSV);
-
         var rows = CSV.split(/\n(?![\w]+["])/g),
             cols = rows[0].split(/(?!"),(?![\w]+["])/g).length,
             returnVal = true,
@@ -394,41 +392,71 @@ if (typeof data !== "object") {
     /**
      * Draw CSV Data into a HTML Table
      * @param  {Object} CSVData An instance of DataObject for a CSV
-     * @deprecated
+     * @param {Object} attributes An object containing attributes to be set on the table (for example {border: 0});
      */
-    data.drawAsTable = function (CSVData) {
+    data.drawAsTable = function (CSVData, attributes) {
 
         var table = document.createElement("table"),
             tbody = document.createElement("tbody"),
             thead = document.createElement("thead"),
             i,
-            v = 0,
-            rowcount;
+            a,
+            column,
+            rowcount,
+            attr,
+            tempData = {},
+            owns = Object.prototype.hasOwnProperty;
 
         thead.insertRow(0);
 
-        //Add the head of the table...
+        // Add columns into an object with an array each
         for (i = 0; i < CSVData.columns.length; i += 1) {
-            thead.rows[0].appendChild(document.createElement("th"));
-            thead.rows[0].childNodes[i].appendChild(document.createTextNode(CSVData.columns[i]));
+            tempData[CSVData.columns[i]] = [];
         }
 
-        //And add the rows...
+        // and then add the cells by column, so they dont get mixed up when we output the table.
         data.forEach(CSVData.rows, function (a, row) {
-
-            tbody.insertRow(a);
 
             data.forEach(row, function (field, value) {
 
-                tbody.rows[a].insertCell();
-
-                tbody.rows[a].cells[0].appendChild(document.createTextNode(value));
-
-                v += 1;
+                tempData[field].push(value);
 
             });
 
         });
+
+        // First, insert the correct number of rows to the tbody.
+        for (i = 0; i < tempData[CSVData.columns[0]].length; i += 1) {
+            tbody.insertRow(i);
+        }
+
+        // Now, for each of the columns, add a th into the thead and add a cell into every row for the values
+        for (i = 0; i < CSVData.columns.length; i += 1) {
+
+            var newHeading = document.createElement("th");
+            newHeading.appendChild(document.createTextNode(CSVData.columns[i]));
+
+            thead.appendChild(newHeading);
+
+            // Loop through the rows
+            for (a = 0; a < tempData[CSVData.columns[i]].length; a += 1) {
+                
+                var newCell = document.createElement("td");
+                newCell.appendChild(document.createTextNode(tempData[CSVData.columns[i]][a]));
+
+                tbody.rows[a].appendChild(newCell);
+
+            }
+
+        }
+
+        //Apply any given attributes
+        
+        for (attr in attributes) {
+
+            table.setAttribute(attr, attributes[attr]);
+
+        }
 
         table.appendChild(thead);
         table.appendChild(tbody);
@@ -479,10 +507,10 @@ if (typeof data !== "object") {
 
                 });
 
-            }
+                returnObj.push(rowData);
+                cellIndex = 0;
 
-            returnObj.push(rowData);
-            cellIndex = 0;
+            }
 
         });
 

@@ -1,6 +1,7 @@
 window.processedData = null;
 window.loadedData = null;
 window.invalidData = null;
+window.weatherData = null;
 
 describe("CSV Conversion", function() {
 
@@ -8,11 +9,8 @@ describe("CSV Conversion", function() {
     data.load("http://127.0.0.1/Simple.csv", {
       type: "GET",
       callback: function (response) {
-        console.log("Callback from first GET");
         window.loadedData = response;
         window.processedData = data.CSVtoJSON(loadedData);
-        console.log(processedData);
-        console.log(loadedData);
       }
     });
 
@@ -20,6 +18,13 @@ describe("CSV Conversion", function() {
       type: "GET",
       callback: function (response) {
         window.invalidData = response;
+      }
+    });
+
+    data.load("http://127.0.0.1/Weather.csv", {
+      type: "GET",
+      callback: function (response) {
+        window.weatherData = data.CSVtoJSON(response);
       }
     });
 
@@ -120,6 +125,32 @@ describe("CSV Conversion", function() {
     it("Should create a CSV which is valid", function () {
 
       expect(data.isValidCSV(processedData.toCSV())).toBeTruthy();
+
+    });
+
+  });
+
+  describe("Table R/W", function () {
+
+    var table;
+
+    it("Should generate a table with the correct number of rows", function () {
+
+      table = data.drawAsTable(window.weatherData, {style: "display: none;"});
+
+      waits(100);
+
+      expect(table.rows.length).toEqual(399);
+
+    });
+
+    it("Should convert a table back into a CSV with the same number of rows", function () {
+
+      var tableData = data.CSVfromTable(table);
+
+      console.log(tableData);
+
+      expect(tableData.rows.length).toEqual(398);
 
     });
 

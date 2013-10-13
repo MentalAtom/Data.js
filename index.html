@@ -11,12 +11,35 @@
 		}
 	})
 	</script>
+
+	<style type="text/css">
+
+		.nicetable {
+			font-family: Verdana, Geneva, sans-serif;
+			font-size: 11px;
+		}
+
+		.nicetable thead{
+			background: #101F8B;
+			color: #FFFFFF;
+		}
+
+		.nicetable tbody td{
+			border: 1px solid #CCCCCC;
+		}
+
+		.nicetable td:empty{
+			background: #CCC;
+		}
+
+	</style>
+
 </head>
 <body>
 
 	<h1>Table Data</h1>
 
-	<div style="width:50%;float:left;display:block;">
+	<div style="width:50%;float:left;display:none;">
 		<table cellpadding="1" cellspacing="1" id="testTable" border="1" width="80%">
 			<thead>
 				<tr>
