@@ -34,7 +34,7 @@ describe("CSV Conversion", function() {
   describe("Read CSV file length correctly", function () {
 
     it("Should read the loaded CSV as a string", function() {
-      console.log(loadedData);
+      // console.log(loadedData);
       expect(loadedData).toHaveTypeOf("string");
     });
 
@@ -148,7 +148,7 @@ describe("CSV Conversion", function() {
 
       var tableData = data.CSVfromTable(table);
 
-      console.log(tableData);
+      // console.log(tableData);
 
       expect(tableData.rows.length).toEqual(398);
 

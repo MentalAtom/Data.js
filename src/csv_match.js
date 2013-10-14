@@ -3,7 +3,7 @@ data.CSVMatcher = (function () {
 	"use strict";
 
 	var config = {
-		types: ["equals", "morethan", "lessthan", "notequal", "contains"],
+		types: ["equals", "morethan", "lessthan", "notequal", "contains", "matches"],
 		equals: {
 			discover: /[\w\s]*\s(?=equals|[\=]{1,3}(?!=))/,
 			//If we match this, then we have equals signs. If not, it must be the word equals.
@@ -33,6 +33,11 @@ data.CSVMatcher = (function () {
 			discover: /[\w\s]*\s(?=contains)/g,
 			delimeter: /\s(?=contains\s)/,
 			delimitMatch: /\scontains\s/g
+		},
+		matches: {
+			discover: /[\w\s]*\s(?=matches)/,
+			delimeter: /\s(?=matches\s)/,
+			delimitMatch: /\smatches\s/g
 		}
 	};
 
@@ -146,6 +151,8 @@ data.CSVMatcher = (function () {
 			firstPart = theString.substring(0, theString.indexOf(delimeter) -1).trim();
 
 			lastPart = theString.substring(theString.indexOf(delimeter) + delimeter.length + 1, theString.length).trim();
+
+			//console.log(lastPart.indexOf("\\"));
 
 			this.queryParts = [firstPart, lastPart];
 
@@ -264,6 +271,12 @@ data.CSVMatcher = (function () {
 
 		},
 
+		/**
+		 * Checks if first contains last
+		 * @param  {String|Number} first The column name
+		 * @param  {String|Number} last  The row value
+		 * @return {Array}       The row numbers which match
+		 */
 		containsMatcher : function (first, last) {
 
 			var that = this;
@@ -276,6 +289,49 @@ data.CSVMatcher = (function () {
 				if (fieldLabel === first) {
 
 					if (field.indexOf(last) > -1) {
+						that.rows.push(that.CSVData[rowIndex]);
+					}
+
+				}
+
+			});
+
+		},
+
+		/**
+		 * Checks if first matches the RegExp
+		 * @param  {String|Last} first The column name
+		 * @param  {RegExp} last  The regex to match
+		 * @return {Array}       The row numbers which match
+		 */
+		matchesMatcher : function (first, last) {
+
+			var flags,
+				that = this,
+				regExp;
+
+			// Cleanup the RegExp if necessary
+			if (last.substring(0, 1) === "/") {
+				last = last.substring(1, last.length);
+			}
+
+			if (/\/[gim]/.test(last.substr(last.length - 2, 2))) {
+				flags = last.substr(last.length - 1, 1);
+				last = last.substring(0, last.length - 2);
+			}
+
+			regExp = new RegExp(last, flags);
+
+			data.forEachDeep(this.CSVData, function (rowIndex, fieldLabel, field) {
+
+				field = field.toString().trim();
+				fieldLabel = fieldLabel.trim();
+
+				if (fieldLabel === first) {
+
+					//console.log(new RegExp(last));
+
+					if (regExp.test(field)) {
 						that.rows.push(that.CSVData[rowIndex]);
 					}
 
