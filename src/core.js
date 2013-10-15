@@ -24,7 +24,13 @@
 
 			xhr.open(options.type, URL);
 
-			xhr.onload = onload;
+			// xhr.onload = onload;
+			// Just for IE7 :)
+			xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    onload();
+                }
+            };
 
 			xhr.send(JSON.stringify(options.data));
 

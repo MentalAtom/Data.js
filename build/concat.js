@@ -116,7 +116,13 @@ if (typeof data !== "object") {
 
 			xhr.open(options.type, URL);
 
-			xhr.onload = onload;
+			// xhr.onload = onload;
+			// Just for IE7 :)
+			xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    onload();
+                }
+            };
 
 			xhr.send(JSON.stringify(options.data));
 
@@ -405,9 +411,11 @@ if (typeof data !== "object") {
             rowcount,
             attr,
             tempData = {},
-            owns = Object.prototype.hasOwnProperty;
+            owns = Object.prototype.hasOwnProperty,
+            metaRows;
 
-        thead.insertRow(0);
+        // thead.insertRow(0);
+        thead.appendChild(document.createElement("tr"));
 
         // Add columns into an object with an array each
         for (i = 0; i < CSVData.columns.length; i += 1) {
@@ -427,7 +435,11 @@ if (typeof data !== "object") {
 
         // First, insert the correct number of rows to the tbody.
         for (i = 0; i < tempData[CSVData.columns[0]].length; i += 1) {
-            tbody.insertRow(i);
+            tbody.appendChild(document.createElement("tr"));
+        }
+
+        if (!tbody.rows.length) {
+            metaRows = tbody.getElementsByTagName("tr");
         }
 
         // Now, for each of the columns, add a th into the thead and add a cell into every row for the values
@@ -444,7 +456,11 @@ if (typeof data !== "object") {
                 var newCell = document.createElement("td");
                 newCell.appendChild(document.createTextNode(tempData[CSVData.columns[i]][a]));
 
-                tbody.rows[a].appendChild(newCell);
+                if (tbody.rows.length !== undefined && tbody.rows.length !== 0) {
+                    tbody.rows[a].appendChild(newCell);
+                } else {
+                    metaRows[a].appendChild(newCell);
+                }
 
             }
 
