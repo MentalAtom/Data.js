@@ -20,9 +20,13 @@ module.exports = function(grunt) {
       options: {
         banner: '/*!\n <%= pkg.name %> - v<%= pkg.version %> | Build Date: <%= grunt.template.today("yyyy-mm-dd") %> \n (c) 2013 Matt Malone | <%= licenseURL %>\n*/\n'
       },
-      build: {
+      modern: {
         src: 'build/concat.js',
         dest: 'build/<%= pkg.version %>/<%= pkg.name %>.min.js'
+      },
+      retro: {
+        src: ['build/json2.js', 'build/concat.js'],
+        dest: 'build/<%= pkg.version %>/<%= pkg.name %>.ie7.min.js'
       }
     },
     clean: {
@@ -69,7 +73,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'concat', 'jasmine:prebuild', 'uglify', 'clean:concat', 'jasmine:postbuild']);
+  grunt.registerTask('default', ['jshint', 'concat', 'jasmine:prebuild', 'uglify:modern', 'uglify:retro', 'clean:concat', 'jasmine:postbuild']);
   grunt.registerTask('test', ['jshint', 'concat', 'jasmine:prebuild']);
 
 };
