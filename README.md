@@ -10,7 +10,7 @@ Current version: [0.1.0](https://github.com/MentalAtom/Data.js/releases/tag/0.1.
 
 *Current to-do:*
 * ~~Add a matcher for values which match a regex~~ - **Docs TODO**
-* Allow the use of wildcards in matc expressions
+* ~~Allow the use of wildcards in match expressions~~ - Matching a regex is a much better than doing this, so I'm not gonna do it.
 * Test (and maybe fix) support for IE7 depending on how horrific it is
 * Add matchers for status (such as "is set" and "is empty")
 * CSV sortBy function to sort by columns
