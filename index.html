@@ -9,6 +9,12 @@
 		callback: function (response) {
 			window.csv = data.CSVtoJSON(response);
 		}
+	});
+
+	data.load("example/Customers.xml", {
+		callback: function (response) {
+			window.XMLData = response;
+		}
 	})
 	</script>
 

@@ -17,14 +17,17 @@ module.exports = function(grunt) {
       }
     },
     uglify: {
-      options: {
-        banner: '/*!\n <%= pkg.name %> - v<%= pkg.version %> | Build Date: <%= grunt.template.today("yyyy-mm-dd") %> \n (c) 2013 Matt Malone | <%= licenseURL %>\n*/\n'
-      },
       modern: {
+        options: {
+          banner: '/*!\n <%= pkg.name %> - v<%= pkg.version %> | Build Date: <%= grunt.template.today("yyyy-mm-dd") %> \n (c) 2013 Matt Malone | <%= licenseURL %>\n*/\n'
+        },
         src: 'build/concat.js',
         dest: 'build/<%= pkg.version %>/<%= pkg.name %>.min.js'
       },
       retro: {
+        options: {
+          banner: '/*!\n <%= pkg.name %> - v<%= pkg.version %> | Build Date: <%= grunt.template.today("yyyy-mm-dd") %> \n (c) 2013 Matt Malone | <%= licenseURL %>\n Contains JSON2.js | https://github.com/douglascrockford/JSON-js*/\n'
+        },
         src: ['build/json2.js', 'build/concat.js'],
         dest: 'build/<%= pkg.version %>/<%= pkg.name %>.ie7.min.js'
       }
