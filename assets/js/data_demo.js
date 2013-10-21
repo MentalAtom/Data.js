@@ -109,4 +109,15 @@ $(function () {
 
 	});
 
+	// Delimeter checkbox
+	$("#custom, #delimeter").on("change load", function () {
+
+		if ($("#custom").is(":checked")) {
+			$("label[for=customDelimeter], #customDelimeter").removeClass("is-hidden");
+		} else {
+			$("label[for=customDelimeter], #customDelimeter").addClass("is-hidden");
+		}
+
+	});
+
 });

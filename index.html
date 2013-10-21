@@ -27,7 +27,7 @@
 
 					<p>You can also <a class="popup-open" href="#textinput">dump your file in as text</a> if you want.</p>
 
-					<div class="overlay is-hidden"><span>Data Loaded. reset?</span></div>
+					<div class="overlay is-hidden"><span>Data Loaded. Click to nuke!</span></div>
 
 				</form>
 			</section>
@@ -37,13 +37,16 @@
 			<section class="step2 is-hidden">
 				<form class="l-form">
 					<p>Is the file comma delimted, or something else?</p>
-					<label for="Delimeter">
-						<input type="radio" id="Delimeter" name="delimeter" value="comma" />Commas, of course.
+					<label for="delimeter" class="radioLabel">
+						<input type="radio" id="delimeter" name="delimeter" value="comma" />Commas, of course.
 					</label>
 
-					<label for="Custom">
-						<input type="radio" id="Custom" name="delimeter" value="other" />No, something else. Commas are <i>so</i> old fashioned!
+					<label for="custom" class="radioLabel">
+						<input type="radio" id="custom" name="delimeter" value="other" />No, something else. Commas are <i>so</i> old fashioned!
 					</label>
+
+					<label for="customDelimeter" class="is-hidden">What is this delimeter you speak of? <small>(You'll need to double escape special characters e.g. /\\t/)</small></label>
+					<input spellcheck="false" id="customDelimeter" type="text" class="is-hidden" placeholder="Delimeter here. RegExp will work too." />
 				</form>
 			</section>
 

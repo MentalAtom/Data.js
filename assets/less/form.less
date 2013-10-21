@@ -26,8 +26,16 @@ input[type=text] {
 	label, p {
 		color: @white;
 		display: block;
-		margin-bottom: 10px;
+		margin-bottom: 5px;
 		clear: left;
+	}
+
+	label + label {
+		margin-top: 15px;
+	}
+
+	.radioLabel + .radioLabel {
+		margin-top: 5px;
 	}
 
 	p {
@@ -46,14 +54,17 @@ input[type=text] {
 			border-right: 0px;
 		}
 
-		position: relative;
-		z-index: 2;
+		&:not(.is-hidden) {
+			position: relative;
+			z-index: 2;
+		}
 
 		& + .btn {
 			border: 2px solid darken(@theme_blue, 10%);
 			border-left: 0px;
 			position: relative;
 		}
+
 	}
 
 	input[type=radio] {
@@ -73,13 +84,19 @@ input[type=text] {
 			border: 2px solid darken(@theme_blue, 10%);
 		}
 
+		&:focus{
+			outline: none;
+		}
+
 		&:hover:after {
 			border-color: darken(@theme_blue, 25%);
 		}
 
 		&:checked:after {
 			background: @theme_green;
-			content: '\2713';
+			content: '';
+			background-image: url('../svg/check.svg');
+			background-size: 16px 16px;
 		}
 	}
 

@@ -97,7 +97,8 @@ a {
  */
 
 a:focus,
-button:focus {
+button:focus,
+input:focus {
   outline: thin dotted;
 }
 
@@ -467,6 +468,7 @@ body {
   min-width: 90%;
   margin-bottom: 40px;
   border-bottom: 1px solid #1e5b97;
+  padding-bottom: 20px;
 }
 
 .l-form {
@@ -571,6 +573,8 @@ a:hover {
   -webkit-transform: translate(-50%, -50%);
   color: #FFF;
   font-size: 2em;
+  width: 75%;
+  text-align: center;
 }
 
 .popup {
@@ -646,8 +650,16 @@ input[type=text].is-invalid {
 .l-form p {
   color: #ffffff;
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   clear: left;
+}
+
+.l-form label + label {
+  margin-top: 15px;
+}
+
+.l-form .radioLabel + .radioLabel {
+  margin-top: 5px;
 }
 
 .l-form p {
@@ -661,12 +673,15 @@ input[type=text].is-invalid {
 .l-form input {
   width: 50%;
   float: left;
-  position: relative;
-  z-index: 2;
 }
 
 .l-form input:first-of-type {
   border-right: 0px;
+}
+
+.l-form input:not(.is-hidden) {
+  position: relative;
+  z-index: 2;
 }
 
 .l-form input + .btn {
@@ -693,13 +708,20 @@ input[type=text].is-invalid {
   border: 2px solid #1e5b97;
 }
 
+.l-form input[type=radio]:focus {
+  outline: none;
+}
+
 .l-form input[type=radio]:hover:after {
   border-color: #113557;
 }
 
 .l-form input[type=radio]:checked:after {
   background: #85c904;
-  content: '\2713';
+  content: '';
+  background-image: url('../svg/check.svg');
+  -webkit-background-size: 16px 16px;
+  background-size: 16px 16px;
 }
 
 .spinner {
