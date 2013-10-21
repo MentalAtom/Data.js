@@ -1,1 +1,66 @@
-"Data.js" 
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Data.js CSV Demo</title>
+	<link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="assets/css/data.css" />
+</head>
+<body>
+
+	<!-- Section 1 -->
+	<div class="l-seperator t-blue">
+
+		<div class="l-container">
+			<header>
+				<h1>Data.js - CSV Parser and Organiser <small>v0.1.0</small></h1>
+			</header>
+
+			<span class="l-bignum step1">1</span>
+
+			<section class="step1">
+				<form class="l-form l-form_inputfile">
+					<label for="CSVFile">Awesome CSV URL below:</label>
+					<input spellcheck="false" id="CSVFile" type="text" placeholder="URL Please :)" />
+					<button class="btn" id="CSVGet" disabled>Go get it! <div class="spinner"></div></button>
+
+					<span class="request-status status_good">Cool! That's some fancy data you got there.</span>
+
+					<p>You can also <a class="popup-open" href="#textinput">dump your file in as text</a> if you want.</p>
+
+					<div class="overlay is-hidden"><span>Data Loaded. reset?</span></div>
+
+				</form>
+			</section>
+
+			<span class="l-bignum t-pink step2 is-hidden">2</span>
+				
+			<section class="step2 is-hidden">
+				<form class="l-form">
+					<p>Is the file comma delimted, or something else?</p>
+					<label for="Delimeter">
+						<input type="radio" id="Delimeter" name="delimeter" value="comma" />Commas, of course.
+					</label>
+
+					<label for="Custom">
+						<input type="radio" id="Custom" name="delimeter" value="other" />No, something else. Commas are <i>so</i> old fashioned!
+					</label>
+				</form>
+			</section>
+
+		</div>
+
+	</div>
+	
+	<div class="popup is-hidden" id="textinput">
+		<h2>CSV Text Input</h2>
+
+		<textarea class="text-input" placeholder="Paste it here!"></textarea>
+
+		<button class="btn btn-success" disabled>Save</button><button class="btn btn-warning">Cancel</button>
+	</div>
+
+	<script src="assets/js/concat.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="assets/js/data_demo.js"></script>
+</body>
+</html>

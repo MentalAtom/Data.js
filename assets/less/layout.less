@@ -1,0 +1,92 @@
+.l-container {
+
+	width: 940px;
+	margin: auto;
+
+}
+
+.l-bignum {
+
+	float: left;
+	color: @white;
+	position: relative;
+	width: 50px;
+	height: 50px;
+	background: @theme_green;
+	padding: 10px;
+	font-size: 1.25em;
+	margin-right: 10px;
+	clear: left;
+
+	& + section {
+		float: left;
+		min-width: 90%;
+		margin-bottom: 40px;
+		border-bottom: 1px solid darken(@theme_blue, 10%);
+	}
+
+}
+
+.l-form {
+
+	display: inline-block;
+	width: 100%;
+
+}
+
+.btn {
+	background: @theme_black;
+	border: 2px solid @theme_darkblue;
+	padding: 7px;
+	color: @white;
+	transition: padding-right 0.2s;
+
+	&[disabled] {
+		color: darken(@white, 50%);
+	}
+
+	&.show-spinner {
+		padding-right: 35px;
+
+		.spinner {
+			opacity: 1;
+		}
+	}
+
+	&.btn-success {
+		background: @theme_green;
+	}
+
+	&.btn-warning {
+		background: lighten(@theme_pink, 10%);
+	}
+
+	& + .btn {
+		margin-left: 10px;
+	}
+}
+
+.request-status {
+
+	position: relative;
+	float: left;
+	width: 50%;
+	padding: 5px 10px;
+	border-radius: 0px 0px 5px 5px;
+	color: @white;
+	top: -30px;
+	transition: top 0.3s;
+
+	&.status_good {
+		background: @theme_green;
+	}
+
+	&.status_fail {
+		background: @theme_pink;
+	}
+
+	&.is-show {
+		top: 0px;
+	}
+
+}
