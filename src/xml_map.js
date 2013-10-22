@@ -1,8 +1,41 @@
-(function () {
+(function (data) {
 
 	"use strict";
 
-	data.XMLHasChildren = function (XMLNode) {
+	var singleXMLNode = function (XMLNode) {
+
+		var nodeData = {},
+			attributes = {};
+
+		if (XMLNode.nodeValue) {
+			nodeData.textContent = XMLNode.nodeValue;
+		} else if (XMLNode.childNodes[0].nodeType === 3) {
+			nodeData.textContent = XMLNode.firstChild.nodeValue.trim();
+		}
+
+		if (XMLNode.attributes && XMLNode.attributes.length > 0) {
+
+			for (var attr in XMLNode.attributes) {
+				if (Object.prototype.hasOwnProperty.call(attr, XMLNode.attributes)) {
+					attributes[XMLNode.attributes[attr].nodeName] = XMLNode.attributes[attr].nodeValue;
+				}
+			}
+
+			nodeData["@attributes"] = attributes;
+
+		}
+
+		if (XMLHasChildren(XMLNode)) {
+
+			// Do something if I have children
+
+		}
+
+		return nodeData;
+
+	};
+
+	var XMLHasChildren = function (XMLNode) {
 
 		var validChildren = 0;
 
@@ -16,41 +49,26 @@
 
 	};
 
-	data.singleXMLNode = function (XMLNode) {
+	data.mapXML = function (XMLDoc) {
 
-		var nodeData = {},
-			internalNode;
+		var rootNode,
+			map;
 
-		nodeData[XMLNode.tagName] = {};
+		//First, find the first root element.
+		data.forEach(XMLDoc.childNodes, function (i, node) {
 
-		internalNode = nodeData[XMLNode.tagName];
+			if (node.nodeType === 1) {
+				rootNode = node;
+				return false;
+			}
 
-		if (XMLNode.nodeValue) {
-			internalNode.textContent = XMLNode.nodeValue;
-		} else if (XMLNode.firstChild.nodeType.nodeType === 3) {
-			internalNode.textContent = XMLNode.firstChild.nodeValue.trim();
-		}
+		});
 
-		if (data.XMLHasChildren(XMLNode)) {
+		map = {};
+		map[rootNode.tagName] = {};
 
-			data.forEach(XMLNode.childNodes, function (i, node) {
-
-				if (node.nodeType === 1) {
-					
-					if (!internalNode[node.tagName]) {
-						internalNode[node.tagName] = data.singleXMLNode(node);
-					} else {
-						internalNode[node.tagName] = [internalNode[node.tagName]];
-						internalNode[node.tagName].push(data.singleXMLNode(node));
-					}
-
-				}
-
-			});
-		}
-
-		return nodeData;
+		return map;
 
 	};
 
-}());
+}(data));

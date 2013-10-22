@@ -9,7 +9,9 @@
      * @return {Object} The JSON Object created from the CSV
      * @{@link http://tools.ietf.org/html/rfc4180 RFC 4108 - Common Format and MIME Type for Comma-Separated Values}
      */
-    data.CSVtoJSON = function (CSVData, delimeter) {
+    data.CSVtoJSON = function (CSVData, delimeter, callback) {
+
+        console.time("ProcessStart");
 
         //Assume commas if we dont have a delimeter set
         if (!delimeter) {
@@ -63,6 +65,12 @@
             newData.push(tempObject);
 
         });
+
+        console.timeEnd("ProcessStart");
+
+        if (callback && typeof callback === "function") {
+            callback(newData);
+        }
 
         return newData;
 

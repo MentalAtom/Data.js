@@ -104,7 +104,8 @@ if (typeof data !== "object") {
                 type: "GET",
                 data: ''
             },
-            onload;
+            onload,
+            onerror;
 
         options = data.extendObject(options, defaults);
 
@@ -113,8 +114,14 @@ if (typeof data !== "object") {
             onload = function () {
                 if (!xhr.responseXML) {
                     options.callback(xhr.responseText);
-                } else {
+                } else if (xhr.responseXML) {
                     options.callback(xhr.responseXML);
+                }
+            };
+
+            onerror = function () {
+                if (options.fail) {
+                    options.fail(xhr.statusText);
                 }
             };
 
@@ -123,9 +130,11 @@ if (typeof data !== "object") {
             // xhr.onload = onload;
             // Just for IE7 :)
             xhr.onreadystatechange = function () {
-                console.log(xhr);
-                if (xhr.readyState === 4 && xhr.status === 0) {
+                if (xhr.readyState === 4 && (xhr.status === 200)) {
+                    console.log(xhr);
                     onload();
+                } else {
+                    onerror();
                 }
             };
 
@@ -192,7 +201,9 @@ if (typeof data !== "object") {
      * @return {Object} The JSON Object created from the CSV
      * @{@link http://tools.ietf.org/html/rfc4180 RFC 4108 - Common Format and MIME Type for Comma-Separated Values}
      */
-    data.CSVtoJSON = function (CSVData, delimeter) {
+    data.CSVtoJSON = function (CSVData, delimeter, callback) {
+
+        console.time("ProcessStart");
 
         //Assume commas if we dont have a delimeter set
         if (!delimeter) {
@@ -246,6 +257,12 @@ if (typeof data !== "object") {
             newData.push(tempObject);
 
         });
+
+        console.timeEnd("ProcessStart");
+
+        if (callback && typeof callback === "function") {
+            callback(newData);
+        }
 
         return newData;
 
@@ -1164,11 +1181,44 @@ data.CSVObject = (function () {
 	};
 
 })(data);
-(function () {
+(function (data) {
 
 	"use strict";
 
-	data.XMLHasChildren = function (XMLNode) {
+	var singleXMLNode = function (XMLNode) {
+
+		var nodeData = {},
+			attributes = {};
+
+		if (XMLNode.nodeValue) {
+			nodeData.textContent = XMLNode.nodeValue;
+		} else if (XMLNode.childNodes[0].nodeType === 3) {
+			nodeData.textContent = XMLNode.firstChild.nodeValue.trim();
+		}
+
+		if (XMLNode.attributes && XMLNode.attributes.length > 0) {
+
+			for (var attr in XMLNode.attributes) {
+				if (Object.prototype.hasOwnProperty.call(attr, XMLNode.attributes)) {
+					attributes[XMLNode.attributes[attr].nodeName] = XMLNode.attributes[attr].nodeValue;
+				}
+			}
+
+			nodeData["@attributes"] = attributes;
+
+		}
+
+		if (XMLHasChildren(XMLNode)) {
+
+			// Do something if I have children
+
+		}
+
+		return nodeData;
+
+	};
+
+	var XMLHasChildren = function (XMLNode) {
 
 		var validChildren = 0;
 
@@ -1182,41 +1232,26 @@ data.CSVObject = (function () {
 
 	};
 
-	data.singleXMLNode = function (XMLNode) {
+	data.mapXML = function (XMLDoc) {
 
-		var nodeData = {},
-			internalNode;
+		var rootNode,
+			map;
 
-		nodeData[XMLNode.tagName] = {};
+		//First, find the first root element.
+		data.forEach(XMLDoc.childNodes, function (i, node) {
 
-		internalNode = nodeData[XMLNode.tagName];
+			if (node.nodeType === 1) {
+				rootNode = node;
+				return false;
+			}
 
-		if (XMLNode.nodeValue) {
-			internalNode.textContent = XMLNode.nodeValue;
-		} else if (XMLNode.firstChild.nodeType.nodeType === 3) {
-			internalNode.textContent = XMLNode.firstChild.nodeValue.trim();
-		}
+		});
 
-		if (data.XMLHasChildren(XMLNode)) {
+		map = {};
+		map[rootNode.tagName] = {};
 
-			data.forEach(XMLNode.childNodes, function (i, node) {
-
-				if (node.nodeType === 1) {
-					
-					if (!internalNode[node.tagName]) {
-						internalNode[node.tagName] = data.singleXMLNode(node);
-					} else {
-						internalNode[node.tagName] = [internalNode[node.tagName]];
-						internalNode[node.tagName].push(data.singleXMLNode(node));
-					}
-
-				}
-
-			});
-		}
-
-		return nodeData;
+		return map;
 
 	};
 
-}());
+}(data));

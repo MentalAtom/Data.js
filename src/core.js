@@ -12,7 +12,8 @@
                 type: "GET",
                 data: ''
             },
-            onload;
+            onload,
+            onerror;
 
         options = data.extendObject(options, defaults);
 
@@ -21,8 +22,14 @@
             onload = function () {
                 if (!xhr.responseXML) {
                     options.callback(xhr.responseText);
-                } else {
+                } else if (xhr.responseXML) {
                     options.callback(xhr.responseXML);
+                }
+            };
+
+            onerror = function () {
+                if (options.fail) {
+                    options.fail(xhr.statusText);
                 }
             };
 
@@ -31,9 +38,11 @@
             // xhr.onload = onload;
             // Just for IE7 :)
             xhr.onreadystatechange = function () {
-                console.log(xhr);
-                if (xhr.readyState === 4 && xhr.status === 0) {
+                if (xhr.readyState === 4 && (xhr.status === 200)) {
+                    console.log(xhr);
                     onload();
+                } else {
+                    onerror();
                 }
             };
 
