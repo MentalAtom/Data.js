@@ -1,0 +1,30 @@
+.niceTable {
+
+	font-family: @tableFontFamily;
+
+	width: 100%;
+
+	thead {
+		background: @theme_green;
+	}
+
+	th {
+		font-weight: normal;
+		padding: 10px 0px;
+		border-bottom: 1px solid @white;
+	}
+
+	tbody {
+		background: lighten(@theme_blue, 20%);
+	}
+
+	td {
+		padding: 5px;
+		border-bottom: 1px solid @white;
+
+		& + td {
+			border-left: 1px solid @white;
+		}
+	}
+
+}

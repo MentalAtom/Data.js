@@ -57,10 +57,28 @@
 	}
 }
 
+#error {
+	width: 25%;
+	max-width: 350px;
+	background: @theme_green;
+
+	p {
+		color: @theme_black;
+	}
+}
+
 .is-hidden {
 	outline: none;
 	clip: rect(1px,1px,1px,1px) !important;
 	left: 0px;
 	top: 0px;
 	position: absolute;
+}
+
+#dataProcess {
+	text-align: center;
+
+	.spinner {
+		margin: auto;
+	}
 }

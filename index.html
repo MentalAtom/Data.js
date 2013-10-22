@@ -3,6 +3,7 @@
 <head>
 	<title>Data.js CSV Demo</title>
 	<link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="assets/css/data.css" />
 </head>
 <body>
@@ -50,6 +51,25 @@
 				</form>
 			</section>
 
+			<span class="l-bignum t-black step3 is-hidden">3</span>
+
+			<section class="step3 is-hidden">
+
+				<p>Everything look good? Let's roll.</p>
+				<button class="btn btn-big btn-success btn_process">Process Data!</button>
+
+			</section>
+
+			<span class="l-bignum t-darkblue step4 is-hidden">4</span>
+
+			<section class="step4 is-hidden">
+
+				<p>Your Data:</p>
+
+				<div class="step4-data"></div>
+
+			</section>
+
 		</div>
 
 	</div>
@@ -59,11 +79,34 @@
 
 		<textarea class="text-input" placeholder="Paste it here!"></textarea>
 
-		<button class="btn btn-success" disabled>Save</button><button class="btn btn-warning">Cancel</button>
+		<button class="btn btn-success popup-close" disabled>Save</button>
+		<button class="btn btn-warning popup-close">Cancel</button>
+	</div>
+
+	<div class="popup is-hidden" id="error">
+		<h2>Oops!</h2>
+
+		<p class="error-text"></p>
+
+		<button class="btn btn-warning popup-close">Close</button>
+	</div>
+
+	<div class="popup is-hidden" id="dataProcess">
+		<h2>Processing Data</h2>
+
+		<p>We're just crunching the data now, and then we'll be right with you.</p>
+		<p>If you have tonnes of data, this may lag your browser out for a second. Hang in there!</p>
+
+		<p class="largeData is-hidden">Large amounts of data detected. Please be patient.</p>
+
+		<div class="spinner"></div>
+
 	</div>
 
 	<script src="assets/js/concat.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="assets/js/data_libs.js"></script>
 	<script src="assets/js/data_demo.js"></script>
+	<script src="assets/js/data_process.js"></script>
 </body>
 </html>

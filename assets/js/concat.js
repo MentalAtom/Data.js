@@ -130,8 +130,7 @@ if (typeof data !== "object") {
             // xhr.onload = onload;
             // Just for IE7 :)
             xhr.onreadystatechange = function () {
-                console.log(xhr);
-                if (xhr.readyState === 4 && xhr.status === 200) {
+                if (xhr.readyState === 4 && (xhr.status === 200)) {
                     console.log(xhr);
                     onload();
                 } else {
@@ -202,7 +201,9 @@ if (typeof data !== "object") {
      * @return {Object} The JSON Object created from the CSV
      * @{@link http://tools.ietf.org/html/rfc4180 RFC 4108 - Common Format and MIME Type for Comma-Separated Values}
      */
-    data.CSVtoJSON = function (CSVData, delimeter) {
+    data.CSVtoJSON = function (CSVData, delimeter, callback) {
+
+        // console.time("ProcessStart");
 
         //Assume commas if we dont have a delimeter set
         if (!delimeter) {
@@ -256,6 +257,12 @@ if (typeof data !== "object") {
             newData.push(tempObject);
 
         });
+
+        // console.timeEnd("ProcessStart");
+
+        if (callback && typeof callback === "function") {
+            callback(newData);
+        }
 
         return newData;
 
@@ -415,7 +422,7 @@ if (typeof data !== "object") {
      * @param  {Object} CSVData An instance of DataObject for a CSV
      * @param {Object} attributes An object containing attributes to be set on the table (for example {border: 0});
      */
-    data.drawAsTable = function (CSVData, attributes) {
+    data.drawAsTable = function (CSVData, attributes, parent, callback) {
 
         var table = document.createElement("table"),
             tbody = document.createElement("tbody"),
@@ -492,7 +499,13 @@ if (typeof data !== "object") {
         table.appendChild(thead);
         table.appendChild(tbody);
 
-        document.getElementsByTagName("body")[0].appendChild(table);
+        console.log(parent, $(parent));
+
+        $(parent)[0].appendChild(table);
+
+        if (callback && typeof callback === "function") {
+            setTimeout(callback, 1000);
+        }
 
         return table;
 

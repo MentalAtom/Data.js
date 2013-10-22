@@ -445,9 +445,17 @@ body {
   transition: background 0.3s;
 }
 
+p {
+  margin-top: 0px;
+  margin-bottom: 0.9375em;
+}
+
 .l-container {
   width: 940px;
   margin: auto;
+  display: block;
+  height: auto;
+  overflow: hidden;
 }
 
 .l-bignum {
@@ -474,39 +482,6 @@ body {
 .l-form {
   display: inline-block;
   width: 100%;
-}
-
-.btn {
-  background: #000103;
-  border: 2px solid #001d28;
-  padding: 7px;
-  color: #ffffff;
-  -webkit-transition: padding-right 0.2s;
-  transition: padding-right 0.2s;
-}
-
-.btn[disabled] {
-  color: #808080;
-}
-
-.btn.show-spinner {
-  padding-right: 35px;
-}
-
-.btn.show-spinner .spinner {
-  opacity: 1;
-}
-
-.btn.btn-success {
-  background: #85c904;
-}
-
-.btn.btn-warning {
-  background: #ff3d83;
-}
-
-.btn + .btn {
-  margin-left: 10px;
 }
 
 .request-status {
@@ -614,12 +589,30 @@ a:hover {
   margin-top: 10px;
 }
 
+#error {
+  width: 25%;
+  max-width: 350px;
+  background: #85c904;
+}
+
+#error p {
+  color: #000103;
+}
+
 .is-hidden {
   outline: none;
   clip: rect(1px, 1px, 1px, 1px) !important;
   left: 0px;
   top: 0px;
   position: absolute;
+}
+
+#dataProcess {
+  text-align: center;
+}
+
+#dataProcess .spinner {
+  margin: auto;
 }
 
 input[type=text] {
@@ -786,6 +779,76 @@ input[type=text].is-invalid {
   }
 }
 
+.btn {
+  background: #000103;
+  border: 2px solid #001d28;
+  padding: 7px;
+  color: #ffffff;
+  -webkit-transition: padding-right 0.2s;
+  transition: padding-right 0.2s;
+}
+
+.btn.btn-big {
+  padding: 10.5px;
+  font-style: 1.5em;
+}
+
+.btn.btn-big.btn-success {
+  border: 2px solid #324c02;
+}
+
+.btn[disabled] {
+  color: #808080;
+}
+
+.btn.show-spinner {
+  padding-right: 35px;
+}
+
+.btn.show-spinner .spinner {
+  opacity: 1;
+}
+
+.btn.btn-success {
+  background: #85c904;
+}
+
+.btn.btn-warning {
+  background: #ff3d83;
+}
+
+.btn + .btn {
+  margin-left: 10px;
+}
+
+.niceTable {
+  font-family: 'Roboto Slab', serif;
+  width: 100%;
+}
+
+.niceTable thead {
+  background: #85c904;
+}
+
+.niceTable th {
+  font-weight: normal;
+  padding: 10px 0px;
+  border-bottom: 1px solid #ffffff;
+}
+
+.niceTable tbody {
+  background: #6ca8e2;
+}
+
+.niceTable td {
+  padding: 5px;
+  border-bottom: 1px solid #ffffff;
+}
+
+.niceTable td + td {
+  border-left: 1px solid #ffffff;
+}
+
 .t-black {
   background: #000103;
 }
@@ -804,4 +867,8 @@ input[type=text].is-invalid {
 
 .t-darkblue {
   background: #001d28;
+}
+
+.largeData {
+  color: #ff0a62;
 }

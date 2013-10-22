@@ -9,115 +9,114 @@ $(function () {
 		goodResponse = "Cool! That's some fancy data you got there",
 		badResponse = "Darn, looks like something went wrong :(",
 		checkTimeout,
-		CSVData;
+		CSVData,
+		hiddenClass = "is-hidden";
 
-	// Bind label click to focus the input
-	$("label").on("click", function () {
-		$("#" + $(this).attr("for")).focus();
-	});
+		// Setup Popups
+		$.dataSetupPopups(".popup");
 
-	// Stop the file form submitting at all ever.
-	$(".l-form_inputfile").on("submit", function (e) {
-		e.preventDefault();
+		// Bind label click to focus input
+		$.dataBindLabels();
 
-		if ($(URLInput).hasClass("is-valid")) {
+		//Supress the forms
+		$.dataSupressFormClass(".l-form");
 
-			$(GoGetBtn).addClass("show-spinner");
+		// Show the custom delimeter box if the custom radio is checked
+		$.dataShowIfChecked("#custom", "label[for=customDelimeter], #customDelimeter");
 
-			data.load(URLInput.value, {
-				type: "GET",
-				callback: function (responseData) {
-					$(GoGetBtn).removeClass("show-spinner");
-					$(response).text(goodResponse);
-					$(response).addClass("is-show").removeClass("status_fail").addClass("status_good");
-					CSVData = responseData;
-					$(".step1 .overlay").removeClass("is-hidden");
-					$(".step2").removeClass("is-hidden");
-				},
-				fail: function () {
-					$(GoGetBtn).removeClass("show-spinner");
-					$(response).text(badResponse);
-					$(response).addClass("is-show").removeClass("status_good").addClass("status_fail");
-				}
-			});
+		$.dataShowIfChecked("[name=delimeter]", ".step3");
 
-			setTimeout(function () {
-				$(response).removeClass("is-show");
-			}, 3000);
+		// Validate the CSV URL before we try and get it
+		$(URLInput).on("keyup", function (e) {
 
-		}
-
-	});
-
-	// Hide the popup when a button is pressed
-	$("#textinput").find(".btn").on("click", function () {
-		$(".overlay, #textinput").addClass("is-hidden");
-	});
-
-	// Get CSV Text from the input box instead
-	$("#textinput").find(".btn-success").on("click", function () {
-		CSVData = $("#textinput").find("textarea").val();
-		$(".step2").removeClass("is-hidden");
-		$(".step1 .overlay").removeClass("is-hidden");
-	});
-
-	// Text area (validate the CSV on input)
-	$("#textinput").find("textarea").on("keyup", function () {
-
-		if ($(this).val()) {
-			$("#textinput").find(".btn-success").prop("disabled", false);
-		} else {
-			$("#textinput").find(".btn-success").prop("disabled", true);
-		}
-
-	});
-
-	// Validate the CSV URL before we try and get it
-	$(URLInput).on("keyup", function (e) {
-
-		if (e.which === 13) {
-			e.preventDefault();
-			return false;
-		}
-
-		GoGetBtn.disabled = true;
-		clearTimeout(checkTimeout);
-
-		checkTimeout = setTimeout(function () {
-			if (validURL.test(URLInput.value)) {
-				URLInput.className = "is-valid";
-				GoGetBtn.disabled = false;
-			} else {
-				URLInput.className = "is-invalid";
-				GoGetBtn.disabled = true;
+			if (e.which === 13) {
+				e.preventDefault();
+				return false;
 			}
-		}, 500);
-		
-	});
 
-	// Set up popups
-	$.each($(".popup-open"), function () {
+			GoGetBtn.disabled = true;
+			clearTimeout(checkTimeout);
 
-		var targetID = $(this).attr("href").substring(1, $(this).attr("href").length);
-
-		$("body").append("<div class='overlay is-hidden' data-popup='" + targetID + "'></div>");
-
-		$(this).on("click", function () {
-			$(".overlay[data-popup='" + targetID + "']").removeClass("is-hidden");
-			$(".popup[id='" + targetID + "']").removeClass("is-hidden");
+			checkTimeout = setTimeout(function () {
+				if (validURL.test(URLInput.value)) {
+					URLInput.className = "is-valid";
+					GoGetBtn.disabled = false;
+				} else {
+					URLInput.className = "is-invalid";
+					GoGetBtn.disabled = true;
+				}
+			}, 500);
+			
 		});
 
-	});
+		// Stop the file form submitting at all ever.
+		$(".l-form_inputfile").on("submit", function (e) {
+			e.preventDefault();
 
-	// Delimeter checkbox
-	$("#custom, #delimeter").on("change load", function () {
+			if ($(URLInput).hasClass("is-valid")) {
 
-		if ($("#custom").is(":checked")) {
-			$("label[for=customDelimeter], #customDelimeter").removeClass("is-hidden");
-		} else {
-			$("label[for=customDelimeter], #customDelimeter").addClass("is-hidden");
-		}
+				$(GoGetBtn).addClass("show-spinner");
 
-	});
+				data.load(URLInput.value, {
+					type: "GET",
+					callback: function (responseData) {
+						$(GoGetBtn).removeClass("show-spinner");
+						$(response).text(goodResponse);
+						$(response).addClass("is-show").removeClass("status_fail").addClass("status_good");
+						CSVData = responseData;
+						$(".step1 .overlay").removeClass(hiddenClass);
+						$(".step2").removeClass(hiddenClass);
+					},
+					fail: function () {
+						$(GoGetBtn).removeClass("show-spinner");
+						$(response).text(badResponse);
+						$(response).addClass("is-show").removeClass("status_good").addClass("status_fail");
+					}
+				});
+
+				setTimeout(function () {
+					$(response).removeClass("is-show");
+				}, 3000);
+
+			}
+
+		});
+
+		// Get CSV Text from the input box instead
+		$("#textinput").find(".btn-success").on("click", function () {
+			CSVData = $("#textinput").find("textarea").val();
+			$(".step2").removeClass(hiddenClass);
+			$(".step1 .overlay").removeClass(hiddenClass);
+		});
+
+		// Text area (validate the CSV on input)
+		$("#textinput").find("textarea").on("keyup", function () {
+
+			if ($(this).val()) {
+				$("#textinput").find(".btn-success").prop("disabled", false);
+			} else {
+				$("#textinput").find(".btn-success").prop("disabled", true);
+			}
+
+		});
+
+		$(".btn_process").on("click", function () {
+
+			var delimeter = $("#customDelimeter").val() ? $("#customDelimeter").val() : ",",
+				errorPopup = $("#error"),
+				errorText = errorPopup.find("p").first(),
+				errorOverlay = $(".overlay[data-popup=error]");
+
+			if ($("#custom").is(":checked") && $("#customDelimeter").val() === "") {
+				$.dataThrowError("You didn't fill in your custom delimeter. I'm sure you'll get it right next time.");
+				return false;
+			}
+
+			$.dataShowPopup("dataProcess");
+			setTimeout( function () {
+				$(window).trigger("doProcess", [CSVData, delimeter]);
+			}, 500);
+
+		});
 
 });

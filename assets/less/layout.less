@@ -2,6 +2,9 @@
 
 	width: 940px;
 	margin: auto;
+	display: block;
+	height: auto;
+	overflow: hidden;
 
 }
 
@@ -33,38 +36,6 @@
 	display: inline-block;
 	width: 100%;
 
-}
-
-.btn {
-	background: @theme_black;
-	border: 2px solid @theme_darkblue;
-	padding: 7px;
-	color: @white;
-	transition: padding-right 0.2s;
-
-	&[disabled] {
-		color: darken(@white, 50%);
-	}
-
-	&.show-spinner {
-		padding-right: 35px;
-
-		.spinner {
-			opacity: 1;
-		}
-	}
-
-	&.btn-success {
-		background: @theme_green;
-	}
-
-	&.btn-warning {
-		background: lighten(@theme_pink, 10%);
-	}
-
-	& + .btn {
-		margin-left: 10px;
-	}
 }
 
 .request-status {

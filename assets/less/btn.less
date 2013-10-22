@@ -1,0 +1,40 @@
+.btn {
+	background: @theme_black;
+	border: 2px solid @theme_darkblue;
+	padding: 7px;
+	color: @white;
+	transition: padding-right 0.2s;
+
+	&.btn-big {
+		padding: 10.5px;
+		font-style: 1.5em;
+
+		&.btn-success {
+			border: 2px solid darken(@theme_green, 25%);
+		}
+	}
+
+	&[disabled] {
+		color: darken(@white, 50%);
+	}
+
+	&.show-spinner {
+		padding-right: 35px;
+
+		.spinner {
+			opacity: 1;
+		}
+	}
+
+	&.btn-success {
+		background: @theme_green;
+	}
+
+	&.btn-warning {
+		background: lighten(@theme_pink, 10%);
+	}
+
+	& + .btn {
+		margin-left: 10px;
+	}
+}
